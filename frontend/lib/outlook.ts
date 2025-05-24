@@ -14,3 +14,28 @@ export async function getFolderId(accessToken: string, folderName: string): Prom
     const folder = data.value.find((f: any) => f.displayName === folderName);
     return folder?.id ?? null;
 }
+
+
+export async function getEmailsFromFolder(accessToken: string, folderId: string) {
+    const res = await fetch(`https://graph.microsoft.com/v1.0/me/mailFolders/${folderId}/messages?$top=25`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+
+    if (!res.ok) {
+        console.error("Failed to fetch messages");
+        return [];
+    }
+
+    const data = await res.json();
+    return data.value; // Array of message objects
+}
+
+export async function getEmailsFromNamedFolder(accessToken: string, folderName: string) {
+    const folderId = await getFolderId(accessToken, folderName);
+    if (!folderId) {
+        throw new Error(`Folder "${folderName}" not found`);
+    }
+    return getEmailsFromFolder(accessToken, folderId);
+}

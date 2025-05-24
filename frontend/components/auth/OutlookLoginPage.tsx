@@ -56,6 +56,7 @@ function OutlookLoginPage() {
             );
 
             toast.success("Successfully linked Outlook account!");
+            window.location.reload()
         } catch (error) {
             console.error(error);
             toast.error("Failed to store Outlook token.");
