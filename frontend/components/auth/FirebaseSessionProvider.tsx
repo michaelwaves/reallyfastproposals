@@ -1,7 +1,9 @@
-// components/FirebaseSessionProvider.tsx
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+"use client";
+
 import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { auth } from "@/lib/firebase"; // Make sure you have this setup
 
 interface AuthContextType {
     user: User | null;
@@ -10,23 +12,31 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const FirebaseSessionProvider = ({ children }: { children: ReactNode }) => {
+export function FirebaseSessionProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
-        return onAuthStateChanged(auth, (firebaseUser) => {
-            setUser(firebaseUser);
-            setLoading(false);
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+
+            if (user && pathname === "/") {
+                router.replace("/dashboard");
+            } else if (!user && pathname !== "/") {
+                router.replace("/");
+            }
         });
-    }, []);
+
+        return () => unsubscribe();
+    }, [pathname, router]);
 
     return (
         <AuthContext.Provider value={{ user, isSignedIn: !!user }}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
-};
+}
 
 export const useAuth = (): AuthContextType => {
     const context = useContext(AuthContext);

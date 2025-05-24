@@ -3,9 +3,9 @@ import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useAuth } from "./FirebaseSessionProvider";
 import { Button } from "../ui/button";
-import { LogIn } from "lucide-react";
+import { LogIn, LogOut } from "lucide-react";
 
-export const LoginWithFirebase = () => {
+export const LoginButton = () => {
     const { user } = useAuth();
 
     const handleSignIn = async () => {
@@ -18,11 +18,11 @@ export const LoginWithFirebase = () => {
     };
 
     return (
-        <Button
-            onClick={user ? handleSignOut : handleSignIn}
-            className=""
-        >
-            <LogIn /> {user ? "Sign Out" : "Sign In with Google"}
-        </Button>
+        <>
+            {user ?
+                <Button onClick={handleSignOut}> <LogOut /> Sign Out</Button> :
+                <Button onClick={handleSignIn}> <LogIn /> Sign In with Google</Button>
+            }
+        </>
     );
 };
