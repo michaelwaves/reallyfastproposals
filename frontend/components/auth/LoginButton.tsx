@@ -1,17 +1,38 @@
 // components/LoginWithFirebase.tsx
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { useAuth } from "./FirebaseSessionProvider";
 import { Button } from "../ui/button";
 import { LogIn, LogOut } from "lucide-react";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
-export const LoginButton = () => {
+export const LoginButton = ({ collapsed }: { collapsed?: boolean }) => {
     const { user } = useAuth();
 
     const handleSignIn = async () => {
         const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth, provider);
+        const result = await signInWithPopup(auth, provider);
+
+        const firebaseUser = result.user;
+        const uid = firebaseUser.uid;
+        const displayName = firebaseUser.displayName ?? "";
+        const email = firebaseUser.email ?? "";
+
+        const [firstName = "", lastName = ""] = displayName.split(" ");
+
+        const userRef = doc(db, "users", uid);
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+            await setDoc(userRef, {
+                firstName,
+                lastName,
+                email,
+                createdAt: new Date().toISOString(),
+            });
+        }
     };
+
 
     const handleSignOut = async () => {
         await signOut(auth);
@@ -20,8 +41,8 @@ export const LoginButton = () => {
     return (
         <>
             {user ?
-                <Button onClick={handleSignOut}> <LogOut /> Sign Out</Button> :
-                <Button onClick={handleSignIn}> <LogIn /> Sign In with Google</Button>
+                <Button onClick={handleSignOut}> <LogOut /> {!collapsed && "Sign Out"}</Button> :
+                <Button onClick={handleSignIn}> <LogIn /> {!collapsed && "Sign In with Google"}</Button>
             }
         </>
     );
