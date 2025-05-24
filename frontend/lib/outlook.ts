@@ -39,3 +39,20 @@ export async function getEmailsFromNamedFolder(accessToken: string, folderName: 
     }
     return getEmailsFromFolder(accessToken, folderId);
 }
+
+
+export async function getMessageById(accessToken: string, messageId: string) {
+    const res = await fetch(`https://graph.microsoft.com/v1.0/me/messages/${encodeURIComponent(messageId)}`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+
+    if (!res.ok) {
+        console.error("Failed to fetch message:", await res.text());
+        return null;
+    }
+
+    const data = await res.json();
+    return data;
+}
