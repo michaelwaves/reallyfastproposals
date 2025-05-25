@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 from sentence_transformers import SentenceTransformer
@@ -8,6 +9,15 @@ import uvicorn
 
 # Initialize FastAPI
 app = FastAPI()
+
+# ✅ Allow all CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 # Load embedding model
 model = SentenceTransformer("all-MiniLM-L6-v2")
