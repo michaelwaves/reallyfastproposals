@@ -1,3 +1,5 @@
 /data/
 o365_token.txt
 .env
+/qdrant_storage/
+/__pycache__/

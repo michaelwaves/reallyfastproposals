@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, HomeIcon, NotebookText, Settings, } from "lucide-react";
+import { ChevronLeft, ChevronRight, HomeIcon, Mail, NotebookText, Settings, } from "lucide-react";
 import Image from "next/image";
 import logo from '@/public/logo.png'
 import { LoginButton } from "../auth/LoginButton";
@@ -21,9 +21,9 @@ const links: Partial<NavbarLinkProps>[] = [
         icon: <HomeIcon size={20} />
     },
     {
-        title: "RFPs",
-        href: "/rfps",
-        icon: <NotebookText size={20} />
+        title: "Emails",
+        href: "/emails",
+        icon: <Mail size={20} />
     },
     {
         title: "Settings",
