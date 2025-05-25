@@ -27,10 +27,10 @@ export default function SearchForm() {
 
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-semibold text-sky-700">Semantic Search</h1>
+      <h1 className="text-2xl font-semibold text-sky-700">Semantic Search Your RFP Inbox</h1>
 
       <div className="space-y-4">
-        <Label className="text-sky-800">Query Text</Label>
+        <Label className="text-sky-800">What does your company do?</Label>
         <Textarea
           className="border-sky-300 focus:ring-sky-500"
           value={text}

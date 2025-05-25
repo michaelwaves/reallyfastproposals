@@ -3,8 +3,8 @@ import Emails from "./Emails";
 function EmailsPage() {
     return (
         <div>
-            <h1>Emails</h1>
-            <p>Search and view emails</p>
+            <h1 className="text-sky-600 text-2xl text-bold py-2">Emails</h1>
+            <p className="text-sky-600 text-lg">Search and view emails</p>
             <Emails />
         </div>
     );

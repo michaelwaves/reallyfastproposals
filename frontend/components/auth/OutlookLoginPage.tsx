@@ -72,7 +72,7 @@ function OutlookLoginPage() {
 
                 {!hasToken ? (
                     <>
-                        <div>
+                        {/* <div>
                             <label className="text-sm text-sky-700">Your Outlook Email</label>
                             <Input
                                 placeholder="you@outlook.com"
@@ -80,9 +80,10 @@ function OutlookLoginPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="mt-1"
                             />
+                        </div> */}
+                        <div className="w-full flex items-center justify-center">
+                            <LoginToOutlook />
                         </div>
-
-                        <LoginToOutlook />
 
                         <p className="text-sm text-gray-500 text-center">
                             We’ll redirect you to Microsoft to connect your account securely.

@@ -1,5 +1,6 @@
 "use client";
 
+import { LogIn } from "lucide-react";
 import { Button } from "../ui/button";
 
 export default function LoginToOutlook() {
@@ -15,5 +16,5 @@ export default function LoginToOutlook() {
         window.location.href = url;
     };
 
-    return <Button onClick={handleLogin}>Sign in with Microsoft</Button>;
+    return <Button onClick={handleLogin}><LogIn /> Sign in with Microsoft</Button>;
 }
