@@ -12,12 +12,10 @@ export async function middleware(request: NextRequest) {
 
     let isAuthenticated = false;
 
-    console.log("hit middleware")
     if (sessionCookie) {
         try {
             await adminAuth.verifySessionCookie(sessionCookie, true);
             isAuthenticated = true;
-            console.log("is authenticated in middleware")
         } catch (error) {
             // Session cookie is invalid, will be handled by clearing it
             console.error('Invalid session cookie:', error);

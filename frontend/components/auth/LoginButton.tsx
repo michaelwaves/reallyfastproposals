@@ -3,16 +3,19 @@ import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { useAuth } from "./FirebaseSessionProvider";
 import { Button } from "../ui/button";
-import { LogIn, LogOut } from "lucide-react";
+import { Loader, LogIn, LogOut } from "lucide-react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { signInAction, signOutAction } from "@/lib/auth-actions";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export const LoginButton = ({ collapsed }: { collapsed?: boolean }) => {
     const { user } = useAuth();
     const router = useRouter();
+    const [loading, setLoading] = useState(false)
 
     const handleSignIn = async () => {
+        setLoading(true)
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider);
 
@@ -27,7 +30,6 @@ export const LoginButton = ({ collapsed }: { collapsed?: boolean }) => {
         //force middleware to rerun
         if (serverSignInResult.success) {
             router.push('/dashboard');
-            router.refresh();
         }
 
         const [firstName = "", lastName = ""] = displayName.split(" ");
@@ -46,6 +48,7 @@ export const LoginButton = ({ collapsed }: { collapsed?: boolean }) => {
     };
 
     const handleSignOut = async () => {
+        setLoading(true)
         await signOut(auth);
         await signOutAction()
         router.push('/dashboard');
@@ -53,9 +56,14 @@ export const LoginButton = ({ collapsed }: { collapsed?: boolean }) => {
 
     return (
         <>
-            {user ?
-                <Button onClick={handleSignOut}> <LogOut /> {!collapsed && "Sign Out"}</Button> :
-                <Button onClick={handleSignIn}> <LogIn /> {!collapsed && "Sign In with Google"}</Button>
+            {loading ?
+                <Button disabled> <Loader className="animate-spin" /></Button> :
+                <>
+                    {user ?
+                        <Button onClick={handleSignOut}> <LogOut /> {!collapsed && "Sign Out"}</Button> :
+                        <Button onClick={handleSignIn}> <LogIn /> {!collapsed && "Sign In with Google"}</Button>
+                    }
+                </>
             }
         </>
     );
