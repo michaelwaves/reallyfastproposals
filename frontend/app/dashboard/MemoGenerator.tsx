@@ -1,6 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter
+} from "@/components/ui/dialog"
 
 interface Result {
     score: number
@@ -11,10 +20,9 @@ interface Result {
 interface MemoGeneratorProps {
     context: string
     results: Result[]
-    onClose: () => void
 }
 
-export default function MemoGenerator({ context, results, onClose }: MemoGeneratorProps) {
+export default function MemoGenerator({ context, results }: MemoGeneratorProps) {
     const [memo, setMemo] = useState('')
     const [loading, setLoading] = useState(false)
     const [sent, setSent] = useState(false)
@@ -41,33 +49,29 @@ export default function MemoGenerator({ context, results, onClose }: MemoGenerat
     }
 
     return (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white p-6 rounded-xl shadow-xl max-w-2xl w-full">
-                <h2 className="text-xl font-semibold mb-4">Management Memo</h2>
-                <textarea
+        <Dialog>
+            <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                    <DialogTitle>Management Memo</DialogTitle>
+                </DialogHeader>
+
+                <Textarea
                     value={memo}
                     onChange={(e) => setMemo(e.target.value)}
-                    rows={12}
-                    className="w-full p-3 border rounded-md font-mono"
+                    rows={10}
+                    placeholder="Memo will appear here after generation..."
+                    className="font-mono"
                 />
-                <div className="flex justify-end gap-3 mt-4">
-                    <button onClick={onClose} className="px-4 py-2 rounded bg-gray-300">Close</button>
-                    <button
-                        onClick={handleGenerateMemo}
-                        className="px-4 py-2 rounded bg-blue-500 text-white"
-                        disabled={loading}
-                    >
+
+                <DialogFooter className="mt-4 flex justify-end gap-2">
+                    <Button onClick={handleGenerateMemo} disabled={loading}>
                         {loading ? 'Generating...' : 'Generate Memo'}
-                    </button>
-                    <button
-                        onClick={handleSendEmail}
-                        className="px-4 py-2 rounded bg-green-600 text-white"
-                        disabled={!memo}
-                    >
+                    </Button>
+                    <Button onClick={handleSendEmail} disabled={!memo}>
                         {sent ? 'Sent!' : 'Send Email to Management'}
-                    </button>
-                </div>
-            </div>
-        </div>
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     )
 }

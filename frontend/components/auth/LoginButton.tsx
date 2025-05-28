@@ -5,9 +5,12 @@ import { useAuth } from "./FirebaseSessionProvider";
 import { Button } from "../ui/button";
 import { LogIn, LogOut } from "lucide-react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { signInAction, signOutAction } from "@/lib/auth-actions";
+import { useRouter } from "next/navigation";
 
 export const LoginButton = ({ collapsed }: { collapsed?: boolean }) => {
     const { user } = useAuth();
+    const router = useRouter();
 
     const handleSignIn = async () => {
         const provider = new GoogleAuthProvider();
@@ -17,6 +20,15 @@ export const LoginButton = ({ collapsed }: { collapsed?: boolean }) => {
         const uid = firebaseUser.uid;
         const displayName = firebaseUser.displayName ?? "";
         const email = firebaseUser.email ?? "";
+
+        const idToken = await firebaseUser.getIdToken();
+        const serverSignInResult = await signInAction(idToken)
+
+        //force middleware to rerun
+        if (serverSignInResult.success) {
+            router.push('/dashboard');
+            router.refresh();
+        }
 
         const [firstName = "", lastName = ""] = displayName.split(" ");
 
@@ -33,9 +45,10 @@ export const LoginButton = ({ collapsed }: { collapsed?: boolean }) => {
         }
     };
 
-
     const handleSignOut = async () => {
         await signOut(auth);
+        await signOutAction()
+        router.push('/dashboard');
     };
 
     return (

@@ -20,12 +20,6 @@ export function FirebaseSessionProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setUser(user);
-
-            if (user && pathname === "/") {
-                router.replace("/dashboard");
-            } else if (!user && pathname !== "/") {
-                router.replace("/");
-            }
         });
 
         return () => unsubscribe();

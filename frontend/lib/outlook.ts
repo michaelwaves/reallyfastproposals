@@ -56,3 +56,51 @@ export async function getMessageById(accessToken: string, messageId: string) {
     const data = await res.json();
     return data;
 }
+
+
+export async function sendMessage({
+    accessToken,
+    toEmail,
+    subject,
+    body,
+}: {
+    accessToken: string
+    toEmail: string
+    subject: string
+    body: string
+}) {
+    const payload = {
+        message: {
+            subject,
+            body: {
+                contentType: "Text",
+                content: body,
+            },
+            toRecipients: [
+                {
+                    emailAddress: {
+                        address: toEmail,
+                    },
+                },
+            ],
+        },
+        saveToSentItems: true,
+    };
+
+    const res = await fetch("https://graph.microsoft.com/v1.0/me/sendMail", {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Failed to send message:", errorText);
+        throw new Error("sendMessage: Failed to send email");
+    }
+
+    return { success: true };
+}

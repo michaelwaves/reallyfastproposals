@@ -6,6 +6,7 @@ import { Slider } from '@/components/ui/slider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import MemoGenerator from './MemoGenerator'
 
 export default function SearchForm() {
   const [text, setText] = useState('')
@@ -88,6 +89,7 @@ export default function SearchForm() {
             </CardContent>
           </Card>
         ))}
+
       </div>
     </div>
   )
