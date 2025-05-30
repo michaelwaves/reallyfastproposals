@@ -10,6 +10,7 @@ import pandas as pd
 
 def run_scraper(username, password, query):
     options = webdriver.ChromeOptions()
+    options.add_experimental_option("detach", True)
     options.add_argument("window-size=1920,1080") 
 
     driver = webdriver.Chrome(options=options)
@@ -50,7 +51,7 @@ def run_scraper(username, password, query):
         
         return results
     finally:
-        driver.quit()
+        pass
 
 
 def close_login_messages(driver):
@@ -59,7 +60,7 @@ def close_login_messages(driver):
             button = driver.find_element(By.ID, "loginMsgCloseButton")
             button.click()
             time.sleep(2)
-        except NoSuchElementException:
+        except Exception:
             break
 
 
@@ -105,4 +106,6 @@ def parse_solicitations(html):
     return results
 
 if __name__ == "__main__":
-    run_scraper("augustus.nasiah@msitip.com","Fcgdaeb1012345!","financial advisory")
+    email = "cathrine.secilia@msitip.com"
+    #email ="augustus.nasiah@msitip"
+    run_scraper(email,"Fcgdaeb1012345!","financial advisory")
