@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, HomeIcon, Mail, NotebookText, Settings, } from "lucide-react";
 import Image from "next/image";
 import logo from '@/public/logo.png'
-import { LoginButton } from "../auth/LoginButton";
 import { useState } from "react";
 import { CustomTooltip } from "../info/CustomTooltip";
 
@@ -78,9 +77,7 @@ function Navbar() {
                         ))}
                     </div>
                 </div>
-                <div className="w-full h-20 flex items-center">
-                    <LoginButton collapsed={collapsed} />
-                </div>
+
             </div>
             <div className="flex items-center h-full">
                 <CustomTooltip description={collapsed ? "Expand" : "Collapse"}>

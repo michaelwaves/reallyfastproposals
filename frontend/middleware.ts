@@ -1,43 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { adminAuth } from './lib/firebase-admin';
+import { auth } from "@/auth";
+import { NextResponse } from "next/server";
 
-const protectedRoutes = ['/dashboard', '/profile', '/admin'];
-const authRoutes = ['/login', '/register'];
+export default auth((req) => {
+    const { nextUrl } = req;
+    const { pathname } = nextUrl;
 
-export async function middleware(request: NextRequest) {
-    const { pathname } = request.nextUrl;
-
-    // Get session cookie
-    const sessionCookie = request.cookies.get('session')?.value;
-
-    let isAuthenticated = false;
-
-    if (sessionCookie) {
-        try {
-            await adminAuth.verifySessionCookie(sessionCookie, true);
-            isAuthenticated = true;
-        } catch (error) {
-            // Session cookie is invalid, will be handled by clearing it
-            console.error('Invalid session cookie:', error);
-        }
+    // Redirect to /dashboard if logged in and visiting /
+    if (req.auth && pathname === "/") {
+        return NextResponse.redirect(new URL("/dashboard", nextUrl));
     }
 
-    // Redirect authenticated users away from auth pages
-    if (isAuthenticated && authRoutes.some(route => pathname.startsWith(route))) {
-        return NextResponse.redirect(new URL('/dashboard', request.url));
-    }
-
-    // Redirect unauthenticated users from protected routes
-    if (!isAuthenticated && protectedRoutes.some(route => pathname.startsWith(route))) {
-        return NextResponse.redirect(new URL('/login', request.url));
+    // Redirect to /login if not logged in and accessing a protected route
+    const isPublicRoute = ["/", "/login", "/signup"].includes(pathname);
+    if (!req.auth && !isPublicRoute) {
+        return NextResponse.redirect(new URL("/", nextUrl));
     }
 
     return NextResponse.next();
-}
-
+});
 export const config = {
-    matcher: [
-        '/((?!api|_next/static|_next/image|favicon.ico).*)',
-    ],
+    matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
     runtime: "nodejs"
-};
+}

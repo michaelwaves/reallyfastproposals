@@ -1,22 +1,15 @@
-"use client"
+import { auth } from "@/auth";
+import LogoutButton from "@/components/auth/LogoutButton";
 
-import { useAuth } from "@/components/auth/FirebaseSessionProvider";
-import SearchForm from "./SearchForm";
-
-function DashboardPage() {
-    const { user } = useAuth()
+async function DashboardPage() {
+    const session = await auth();
     return (
-        <div className="min-h-screen bg-sky-50 p-6">
-            <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 space-y-6 border border-sky-100">
-                <div>
-                    <h1 className="text-3xl font-bold text-sky-800 mb-2">Hello {user?.displayName}</h1>
-                    <p className="text-sky-700 text-lg">Welcome to your RFP dashboard</p>
-                </div>
-
-                <div className="pt-4">
-                    <SearchForm />
-                </div>
+        <div>
+            Dashboard
+            <div>
+                {JSON.stringify(session)}
             </div>
+            <LogoutButton />
         </div>
     );
 }

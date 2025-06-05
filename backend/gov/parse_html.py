@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import pandas as pd
-from embedding import create_embedding
+from backend.pgvector.embedding import create_embedding
 def parse_tender_table(html):
     soup = BeautifulSoup(html, 'html.parser')
     rows = soup.find_all('tr')
