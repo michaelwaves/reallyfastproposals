@@ -1,10 +1,11 @@
 "use client"
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, HomeIcon, Mail, NotebookText, Settings, } from "lucide-react";
+import { ChevronLeft, ChevronRight, HomeIcon, Mail, Notebook, NotebookText, Settings, } from "lucide-react";
 import Image from "next/image";
 import logo from '@/public/logo.png'
 import { useState } from "react";
 import { CustomTooltip } from "../info/CustomTooltip";
+import LogoutButton from "../auth/LogoutButton";
 
 interface NavbarLinkProps {
     title: string | undefined,
@@ -20,9 +21,9 @@ const links: Partial<NavbarLinkProps>[] = [
         icon: <HomeIcon size={20} />
     },
     {
-        title: "Emails",
-        href: "/emails",
-        icon: <Mail size={20} />
+        title: "RFPs",
+        href: "/rps",
+        icon: <Notebook size={20} />
     },
     {
         title: "Settings",
@@ -77,7 +78,9 @@ function Navbar() {
                         ))}
                     </div>
                 </div>
-
+                <div>
+                    <LogoutButton collapsed={collapsed} />
+                </div>
             </div>
             <div className="flex items-center h-full">
                 <CustomTooltip description={collapsed ? "Expand" : "Collapse"}>

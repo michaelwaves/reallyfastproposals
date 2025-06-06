@@ -3,10 +3,10 @@ import { LogOut } from "lucide-react";
 import { Button } from "../ui/button";
 import { signOut } from "next-auth/react";
 
-function LogoutButton() {
+function LogoutButton({ collapsed }: { collapsed?: boolean }) {
     return (
         <Button onClick={() => signOut()}>
-            <LogOut /> Log Out
+            <LogOut /> {!collapsed && "Log Out"}
         </Button>
     );
 }
