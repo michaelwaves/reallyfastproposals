@@ -5,8 +5,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
+import { createOne, updateOne } from "@/lib/postgres/helpers/single"
+import { useSession } from "next-auth/react"
+import { toast } from "sonner"
+import { useState } from "react"
+import { Loader } from "lucide-react"
 
 type SettingsFormValues = {
+    id?: string
     context: string
     notifications: boolean
 }
@@ -20,10 +26,30 @@ export default function SettingsForm({ defaultValues }: { defaultValues?: Settin
     const { register, handleSubmit, setValue, watch } = useForm<SettingsFormValues>({
         defaultValues: defaultValues || DEFAULT_VALUES,
     })
+    const [loading, setLoading] = useState(false)
+    const { data: session } = useSession()
+    const userId = session?.user?.id
 
-    const onSubmit = (data: SettingsFormValues) => {
+    const onSubmit = async (data: SettingsFormValues) => {
         console.log("Saving settings:", data)
+        if (!userId) {
+            toast("Must be logged in to edit")
+            console.error("User settings update attempt for unauthorized user")
+            return
+        }
+        setLoading(true)
         // You can send to API here
+
+        const fulldata = {
+            ...data,
+            userid: userId
+        }
+        console.log(defaultValues)
+        const res = (defaultValues && defaultValues.id)
+            ? await updateOne("settings", defaultValues.id, fulldata)
+            : await createOne("settings", fulldata)
+        toast("Successfully saved settings!")
+        setLoading(false)
     }
 
     const notifications = watch("notifications")
@@ -31,7 +57,7 @@ export default function SettingsForm({ defaultValues }: { defaultValues?: Settin
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="max-w-2xl w-full p-6 rounded-2xl border bg-white space-y-6"
+            className=" w-full p-6 rounded-2xl border bg-white space-y-6"
         >
             <h2 className="text-xl font-semibold text-green-600">Company RFP Settings</h2>
 
@@ -42,7 +68,7 @@ export default function SettingsForm({ defaultValues }: { defaultValues?: Settin
                     id="context"
                     {...register("context")}
                     placeholder="Describe what your company does..."
-                    className="min-h-[120px] border-lime-300 focus:ring-green-500 focus:border-green-500"
+                    className="min-h-[120px] border-green-300 focus:ring-green-500 focus:border-green-500"
                 />
             </div>
 
@@ -58,10 +84,11 @@ export default function SettingsForm({ defaultValues }: { defaultValues?: Settin
 
             {/* Submit Button */}
             <Button
+                disabled={loading}
                 type="submit"
-                className="bg-lime-600 hover:bg-lime-700 text-white w-full rounded-xl"
+                className="bg-green-600 hover:bg-green-700 text-white w-full rounded-xl"
             >
-                Save Settings
+                {loading ? <Loader className="animate-spin" /> : "Save Settings"}
             </Button>
         </form>
     )

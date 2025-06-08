@@ -6,7 +6,7 @@ if (!DATABASE_URL) {
     throw new Error("Please set environment DATABASE_URL")
 }
 
-const globalDb = global as typeof global & { helpers?: pg.IHelpers, db?: pg.IDatabase<object> }
+const globalDb = global as typeof global & { helpers: pg.IHelpers, db: pg.IDatabase<object> }
 
 if (!globalDb.db) {
     const pgp = pg();

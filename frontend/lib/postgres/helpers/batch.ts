@@ -6,7 +6,6 @@ import { revalidatePath } from "next/cache";
 const insert = helpers?.insert
 const batchCreate = async (data: any[], tableName: string) => {
     const session = await auth();
-    const orgId = session?.organization;
     const userId = session?.user?.id;
 
     if (!insert) {
@@ -19,7 +18,6 @@ const batchCreate = async (data: any[], tableName: string) => {
         const fullData = data.map(d => ({
             ...d,
             created_by: userId,
-            organization_id: orgId
         }));
 
         const res = await db.task("insert multiple records", t => {
@@ -38,10 +36,9 @@ const batchCreate = async (data: any[], tableName: string) => {
 
 const batchDelete = async (ids: string[] | number[], tableName: string, idDataType?: string) => {
     const session = await auth();
-    const orgId = session?.organization;
     const userId = session?.user?.id;
 
-    if (!orgId || !userId) throw new Error("Unauthorized");
+    if (!userId) throw new Error("Unauthorized");
     if (ids.length === 0) return;
 
     if (idDataType == "uuid") {
@@ -62,25 +59,23 @@ const batchDelete = async (ids: string[] | number[], tableName: string, idDataTy
 
 const batchSelect = async (ids: string[], tableName: string) => {
     const session = await auth();
-    const orgId = session?.organization;
-
-    if (!orgId) throw new Error("Unauthorized");
+    const userId = session?.user?.id;
     if (ids.length === 0) return [];
 
     return await db.any(
-        `SELECT * FROM ${tableName} WHERE id = ANY($1) AND organization_id = $2`,
-        [ids, orgId]
+        `SELECT * FROM ${tableName} WHERE id = ANY($1) AND userId = $2`,
+        [ids, userId]
     );
 };
 
 const selectAll = async (tableName: string) => {
     const session = await auth();
-    const orgId = session?.organization;
+    const userId = session?.user?.id;
 
-    if (!orgId) {
+    if (!userId) {
         throw new Error("Unauthorized: No organization found");
     }
-    return await db.any(`SELECT * FROM ${tableName} WHERE organization_id = $1`, [orgId]);
+    return await db.any(`SELECT * FROM ${tableName} WHERE userId = $1`, [userId]);
 };
 
 const selectAllNoOrgId = async (tableName: string) => {

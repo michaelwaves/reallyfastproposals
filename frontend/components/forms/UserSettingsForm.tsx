@@ -30,7 +30,7 @@ export default function UserSettingsForm({ defaultValues }: { defaultValues?: Us
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="max-w-2xl w-full p-6 rounded-2xl border bg-white space-y-6"
+            className=" w-full p-6 rounded-2xl border bg-white space-y-6"
         >
             <h2 className="text-xl font-semibold text-green-600">User Settings</h2>
 
@@ -40,7 +40,7 @@ export default function UserSettingsForm({ defaultValues }: { defaultValues?: Us
                     id="name"
                     {...register("name")}
                     placeholder="Name"
-                    className=" border-lime-300 focus:ring-green-500 focus:border-green-500"
+                    className=" border-green-300 focus:ring-green-500 focus:border-green-500"
                 />
             </div >
             <div className="space-y-2 ">
@@ -50,13 +50,13 @@ export default function UserSettingsForm({ defaultValues }: { defaultValues?: Us
                     {...register("email")}
                     type="email"
                     placeholder="Email"
-                    className=" border-lime-300 focus:ring-green-500 focus:border-green-500"
+                    className=" border-green-300 focus:ring-green-500 focus:border-green-500"
                 />
             </div>
 
             <Button
                 type="submit"
-                className="bg-lime-600 hover:bg-lime-700 text-white w-full rounded-xl"
+                className="bg-green-600 hover:bg-green-700 text-white w-full rounded-xl"
             >
                 Save User Settings
             </Button>

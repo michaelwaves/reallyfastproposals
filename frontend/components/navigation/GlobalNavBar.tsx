@@ -22,7 +22,7 @@ const links: Partial<NavbarLinkProps>[] = [
     },
     {
         title: "RFPs",
-        href: "/rps",
+        href: "/rfps",
         icon: <Notebook size={20} />
     },
     {

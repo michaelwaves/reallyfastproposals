@@ -1,5 +1,33 @@
 "use server"
 import { db } from "../db";
+import { auth } from "@/auth"
+
+export const withAuditLog = (action: "create" | "update" | "delete" | "read") => {
+  return (originalFn: Function) => {
+    return async (tableName: string, ...args: any[]) => {
+      const session = await auth()
+      const userId = session?.user?.id
+      const userName = session?.user?.name
+
+      const result = await originalFn(tableName, ...args)
+
+      // Extract record ID
+      const recordId = result?.id || args[0] // fallback
+
+      // Optionally capture changes for update
+      let changes = action === "update" ? args[1] : args[0]
+      changes = action === "read" ? {} : changes
+
+      await db.none(
+        `INSERT INTO audit_logs (user_id, action, table_name, record_id, changes, user_name)
+                 VALUES ($1, $2, $3, $4, $5, $6)`,
+        [userId, action, tableName, recordId, changes, userName]
+      )
+
+      return result
+    }
+  }
+}
 
 const getTotalActions = async () => {
   try {

@@ -1,10 +1,18 @@
+import { auth } from "@/auth";
 import SettingsForm from "@/components/forms/SettingsForm";
-import SettingsNavBar from "@/components/navigation/SettingsNavBar";
+import { db } from "@/lib/postgres/db";
 
-function SettingsPage() {
+async function SettingsPage() {
+    const session = await auth()
+    const id = session?.user?.id
+    const settingsData = await db.oneOrNone(`
+        SELECT * 
+        FROM settings
+        WHERE userId=$1
+        `, [id])
     return (
 
-        <SettingsForm />
+        <SettingsForm defaultValues={settingsData} />
 
     );
 }

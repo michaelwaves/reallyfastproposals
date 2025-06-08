@@ -38,12 +38,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 return user
             }
         },
-
-
         )
-
-
     ],
+    callbacks: {
+        async session({ session, user }) {
+            session.user.id = user.id
+            return session
+        }
+    }
 })
 
 const getUser = async (email: string, password: string) => {
