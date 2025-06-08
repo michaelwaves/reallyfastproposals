@@ -1,0 +1,16 @@
+follow this tutorial to install dependencies
+https://docs.aws.amazon.com/lambda/latest/dg/python-package.html#python-package-create-dependencies
+
+pip install --target ./package -r requirements.txt
+
+cd package
+
+zip -r ../rfp_lambda.zip . OR tar -cvz -f ../rfp_lambda.zip .
+OR
+7z a -tzip ../rfp_lambda.zip .
+
+cd ..
+
+zip my_deployment_package.zip lambda_function.py tar -cvzf rfp_lambda.zip lambda_function.py email_sender.py email_builder.py
+
+7z a -tzip rfp_lambda_zip.zip lambda_function.py email_builder.py email_sender.py
