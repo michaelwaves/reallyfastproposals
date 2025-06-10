@@ -1,13 +1,8 @@
 import json
 import boto3
 import os
-from dotenv import load_dotenv
 from email_sender import send_rfp_email
 
-load_dotenv()
-AWS_SES_REGION = os.getenv("AWS_SES_REGION")
-AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 
 
 def lambda_handler(event, context):
