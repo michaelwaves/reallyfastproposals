@@ -70,7 +70,7 @@ def load_rfp_html_template(name: str, rfp_list: list[dict]) -> str:
         table_rows += f"""
         <tr>
             <td>{rfp['title']}</td>
-            <td><a href="{rfp['link']}" style="color: #2a5934;">View</a></td>
+            <td><a href="https://canadabuys.canada.ca/{rfp['link']}" style="color: #2a5934;">View</a></td>
             <td>{rfp.get('category', '')}</td>
             <td>{published}</td>
             <td>{amended}</td>

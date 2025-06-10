@@ -22,7 +22,7 @@ class EmailSender:
             Destinations=[recipient],
             RawMessage={'Data': msg.as_string()}
         )
-        print(f"Email sent! Message ID: {response["MessageId"]}")
+        print(f"Email sent! Message ID: {response['MessageId']}")
         return response["MessageId"]
 
 

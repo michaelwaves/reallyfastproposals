@@ -1,0 +1,10 @@
+fastapi
+pandas
+python-dotenv
+SQLAlchemy
+uvicorn
+python-multipart
+torch
+sentence-transformers==2.6.1  # or latest stable version you want
+psycopg2-binary
+pgvector
